@@ -1,0 +1,57 @@
+src/main/java/com/lothrazar/invcrafting/mixin/InventoryMenuMixin.java
+  h_a388f643e885cd 1-114
+src/main/java/com/lothrazar/invcrafting/mixin/CreativeInventoryPacketMixin.java
+  h_a388f643e885cd 1-42
+src/test/java/com/lothrazar/invcrafting/InventoryCompatibilityTest.java
+  h_a388f643e885cd 1-500
+src/main/java/com/lothrazar/invcrafting/JEIPlugin.java
+  s_711dbc49e521fe::t_b2b19877287d8d 11
+  h_a388f643e885cd 15-17,22
+src/main/java/com/lothrazar/invcrafting/inventory/ExpandedCraftingSlot.java
+  h_a388f643e885cd 1-21
+src/main/resources/invcrafting.mixins.json
+  h_a388f643e885cd 1-16
+src/main/java/com/lothrazar/invcrafting/mixin/InventoryScreenMixin.java
+  h_a388f643e885cd 1-31
+build.gradle
+  h_a388f643e885cd 70,74-76,178-179
+fabric/build.gradle
+  h_a388f643e885cd 34
+fabric/src/main/java/com/lothrazar/invcrafting/FabricMod.java
+  h_a388f643e885cd 9
+fabric/src/main/resources/fabric.mod.json
+  h_a388f643e885cd 12,15
+gradle/inventory-compatibility.gradle
+  h_a388f643e885cd 1-86
+mod.properties
+  h_a388f643e885cd 5
+src/main/java/com/lothrazar/invcrafting/ModInvCrafting.java
+  h_a388f643e885cd 15
+src/main/java/com/lothrazar/invcrafting/Transfer.java
+  h_a388f643e885cd 8,14,17-20,24-25,29-30,39-42,46-48
+src/main/resources/invcrafting.common.mixins.json
+  h_a388f643e885cd 1-16
+src/main/templates/META-INF/neoforge.mods.toml
+  h_a388f643e885cd 40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e961405aeb1c8573677ca674be502aaef636425c",
+  "prompts": {},
+  "humans": {
+    "h_a388f643e885cd": {
+      "author": "Berke Kocaoğlu <berke.kocaoglu@icloud.com>"
+    }
+  },
+  "sessions": {
+    "s_711dbc49e521fe": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6578751effet93zY6k9Vxpco0",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "Berke Kocaoğlu <berke.kocaoglu@icloud.com>"
+    }
+  }
+}
