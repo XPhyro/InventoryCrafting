@@ -1,0 +1,24 @@
+src/main/java/com/lothrazar/invcrafting/inventory/ExpandedCraftingSlot.java
+  h_a388f643e885cd 1-21
+src/main/java/com/lothrazar/invcrafting/mixin/CreativeInventoryPacketMixin.java
+  h_a388f643e885cd 1-42
+src/main/java/com/lothrazar/invcrafting/mixin/InventoryMenuMixin.java
+  h_a388f643e885cd 1-114
+src/main/java/com/lothrazar/invcrafting/mixin/InventoryScreenMixin.java
+  h_a388f643e885cd 1-31
+src/main/resources/invcrafting.mixins.json
+  h_a388f643e885cd 1-16
+src/test/java/com/lothrazar/invcrafting/InventoryCompatibilityTest.java
+  h_a388f643e885cd 1-500
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c826e99e9d18e03776b4ec61b50341b9f2ed7b58",
+  "prompts": {},
+  "humans": {
+    "h_a388f643e885cd": {
+      "author": "Berke Kocaoğlu <berke.kocaoglu@icloud.com>"
+    }
+  }
+}
