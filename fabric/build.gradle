@@ -10,11 +10,21 @@ file('../mod.properties').withInputStream { modProperties.load(it) }
 def fabricProperties = new Properties()
 file('fabric.properties').withInputStream { fabricProperties.load(it) }
 
-def minecraftVersion = sharedGradleProperties.getProperty('minecraft_version')
+def minecraftVersion = providers.gradleProperty('minecraft_version').getOrElse(sharedGradleProperties.getProperty('minecraft_version'))
+def minecraftProperties = new Properties()
+def minecraftPropertiesFile = file("../versions/${minecraftVersion}.properties")
+if (!minecraftPropertiesFile.isFile()) {
+  throw new GradleException("Unsupported Minecraft version '${minecraftVersion}'. Supported versions: 26.2, 26.3.")
+}
+minecraftPropertiesFile.withInputStream { minecraftProperties.load(it) }
+def fabricApiVersion = providers.gradleProperty('fabric_api_version').getOrElse(minecraftProperties.getProperty('fabric_api_version'))
+def jeiVersion = providers.gradleProperty('jei_version').getOrElse(minecraftProperties.getProperty('jei_version'))
 def modId = modProperties.getProperty('mod_id')
 def modVersion = modProperties.getProperty('mod_version')
+def artifactVersion = "${minecraftVersion}-${modVersion}".toString()
 
-version = "${minecraftVersion}-${modVersion}"
+layout.buildDirectory = layout.projectDirectory.dir("build/${minecraftVersion}")
+version = artifactVersion
 group = modProperties.getProperty('mod_group_id')
 base {
   archivesName = "${modId}-fabric"
@@ -30,13 +40,14 @@ repositories {
 dependencies {
   minecraft "com.mojang:minecraft:${minecraftVersion}"
   implementation "net.fabricmc:fabric-loader:${fabricProperties.getProperty('fabric_loader_version')}"
-  implementation "net.fabricmc.fabric-api:fabric-api:${fabricProperties.getProperty('fabric_api_version')}"
-  compileOnly "mezz.jei:jei-${minecraftVersion}-fabric-api:${sharedGradleProperties.getProperty('jei_version')}"
-  runtimeOnly "mezz.jei:jei-${minecraftVersion}-fabric:${sharedGradleProperties.getProperty('jei_version')}"
+  implementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
+  compileOnly "mezz.jei:jei-${minecraftVersion}-fabric-api:${jeiVersion}"
+  runtimeOnly "mezz.jei:jei-${minecraftVersion}-fabric:${jeiVersion}"
 }
 
 sourceSets.main.java {
   srcDir '../src/main/java'
+  srcDir "../src/minecraft/${minecraftVersion}/java"
   exclude 'com/lothrazar/invcrafting/InvCraftingEvents.java'
   exclude 'com/lothrazar/invcrafting/ModInvCrafting.java'
 }
@@ -47,7 +58,7 @@ sourceSets.main.resources {
 }
 
 processResources {
-  inputs.property 'version', project.version
+  inputs.property 'version', artifactVersion
   inputs.property 'mod_id', modId
   inputs.property 'mod_name', modProperties.getProperty('mod_name')
   inputs.property 'mod_description', modProperties.getProperty('mod_description')
@@ -55,10 +66,12 @@ processResources {
   inputs.property 'mod_license', modProperties.getProperty('mod_license')
   inputs.property 'minecraft_version', minecraftVersion
   inputs.property 'fabric_loader_version', fabricProperties.getProperty('fabric_loader_version')
+  inputs.property 'resource_pack_format', minecraftProperties.getProperty('resource_pack_format')
+  inputs.property 'resource_pack_minor_format', minecraftProperties.getProperty('resource_pack_minor_format')
 
   filesMatching('fabric.mod.json') {
     expand(
-      version: project.version,
+      version: artifactVersion,
       mod_id: modId,
       mod_name: modProperties.getProperty('mod_name'),
       mod_description: modProperties.getProperty('mod_description'),
@@ -66,6 +79,12 @@ processResources {
       mod_license: modProperties.getProperty('mod_license'),
       minecraft_version: minecraftVersion,
       fabric_loader_version: fabricProperties.getProperty('fabric_loader_version')
+    )
+  }
+  filesMatching('pack.mcmeta') {
+    expand(
+      resource_pack_format: minecraftProperties.getProperty('resource_pack_format'),
+      resource_pack_minor_format: minecraftProperties.getProperty('resource_pack_minor_format')
     )
   }
 }

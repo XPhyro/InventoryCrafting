@@ -63,6 +63,6 @@ ${mod_description}
 [[dependencies.${mod_id}]]
     modId="minecraft"
     type="required" # was mandatory=true
-    versionRange="[${minecraft_version},)"
+    versionRange="[${minecraft_version}]"
     ordering="NONE"
     side="BOTH"

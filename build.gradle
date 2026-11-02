@@ -11,6 +11,20 @@ def localFile = file("mod.properties")
 localFile.withInputStream { localProps.load(it) }
 localProps.each { k, v -> project.ext.set(k, v) }
 
+def minecraftProperties = new Properties()
+def minecraftPropertiesFile = file("versions/${minecraft_version}.properties")
+if (!minecraftPropertiesFile.isFile()) {
+    throw new GradleException("Unsupported Minecraft version '${minecraft_version}'. Supported versions: 26.2, 26.3.")
+}
+minecraftPropertiesFile.withInputStream { minecraftProperties.load(it) }
+minecraftProperties.each { k, v ->
+    if (!project.hasProperty(k)) {
+        project.ext.set(k, v)
+    }
+}
+layout.buildDirectory = layout.projectDirectory.dir("build/${minecraft_version}")
+sourceSets.main.java.srcDir("src/minecraft/${minecraft_version}/java")
+
 if (project == rootProject) {
 tasks.named('wrapper', Wrapper).configure {
     // Define wrapper values here so as to not have to always do so when updating gradlew.properties.
@@ -51,7 +65,7 @@ base {
     archivesName = mod_id
 }
 
-// Minecraft 26.3 requires Java 25, so mods should target Java 25.
+// Minecraft 26.2 and 26.3 require Java 25, so mods should target Java 25.
 // for intellij make sure to set JVM  Navigate to Build, Execution, Deployment > Build Tools > Gradle
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
@@ -199,7 +213,18 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
     inputs.properties replaceProperties
     expand replaceProperties
     from "src/main/templates"
-    into "build/generated/sources/modMetadata"
+    into layout.buildDirectory.dir("generated/sources/modMetadata")
+}
+
+processResources {
+    def packProperties = [
+        resource_pack_format: resource_pack_format,
+        resource_pack_minor_format: resource_pack_minor_format
+    ]
+    inputs.properties packProperties
+    filesMatching('pack.mcmeta') {
+        expand packProperties
+    }
 }
 
 // ???

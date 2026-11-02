@@ -5,6 +5,10 @@ on: [pull_request, push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        minecraft: ['26.2', '26.3']
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -17,6 +21,6 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew build
+        run: ./gradlew -Pminecraft_version=${{ matrix.minecraft }} build
       - name: build Fabric mod
-        run: ./gradlew -p fabric build
+        run: ./gradlew -p fabric -Pminecraft_version=${{ matrix.minecraft }} build

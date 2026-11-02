@@ -6,7 +6,6 @@ import com.lothrazar.invcrafting.ModConstants;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -260,7 +259,7 @@ public class ContainerPlayerCrafting extends InventoryMenu {
       }
       slot.onTake(playerIn, itemstack1);
       if (index == 0) {
-        playerIn.drop(itemstack1, false, Prediction.PREDICTED);
+        CraftingCompatibility.dropCraftingRemainder(playerIn, itemstack1);
       }
     }
     return itemstack;

@@ -2,6 +2,7 @@
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/inventory-crafting-grid",
   "promos": {
     "1.21.1-latest": "2.0.0",
+    "26.2-latest": "2.0.0",
     "26.3-latest": "2.0.0"
   },
   "1.21.1": {
@@ -9,6 +10,9 @@
   },
   "26.1.2": {
     "2.0.0": "Ported"
+  },
+  "26.2": {
+    "2.0.0": "Added Minecraft 26.2 support for Fabric and NeoForge alongside 26.3"
   },
   "26.3": {
     "2.0.0": "Updated for Minecraft 26.3"
