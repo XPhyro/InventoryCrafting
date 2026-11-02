@@ -1,0 +1,30 @@
+fabric/build.gradle
+  s_711dbc49e521fe::t_d3f1cd121be304 13-16
+  s_711dbc49e521fe::t_3526ba01ee29e1 17-19
+src/main/resources/pack.mcmeta
+  s_711dbc49e521fe::t_d3f1cd121be304 4
+  s_711dbc49e521fe::t_b9229792b19b1b 5
+src/main/templates/META-INF/neoforge.mods.toml
+  s_711dbc49e521fe::t_d3f1cd121be304 66
+.github/workflows/build.yml
+  s_711dbc49e521fe::t_d3f1cd121be304 8-11
+update.json
+  s_711dbc49e521fe::t_d3f1cd121be304 5,14-15
+  s_711dbc49e521fe::t_42586460d591a8 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ef3c66b4b954e75b08e5f7add6c39c4b445a3098",
+  "prompts": {},
+  "sessions": {
+    "s_711dbc49e521fe": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6578751effet93zY6k9Vxpco0",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "Berke Kocaoğlu <berke.kocaoglu@icloud.com>"
+    }
+  }
+}
