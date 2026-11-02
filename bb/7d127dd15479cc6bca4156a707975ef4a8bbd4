@@ -1,0 +1,31 @@
+src/main/java/com/lothrazar/invcrafting/inventory/ContainerPlayerCrafting.java
+  s_711dbc49e521fe::t_b2b19877287d8d 5,83-88,116-120,133,138,166
+src/main/java/com/lothrazar/invcrafting/JEIPlugin.java
+  s_711dbc49e521fe::t_b2b19877287d8d 12
+src/main/java/com/lothrazar/invcrafting/ModInvCrafting.java
+  s_711dbc49e521fe::t_b2b19877287d8d 13
+src/main/java/com/lothrazar/invcrafting/inventory/GuiInventoryCrafting.java
+  s_711dbc49e521fe::t_b2b19877287d8d 3,12
+src/main/java/com/lothrazar/invcrafting/ModConstants.java
+  s_711dbc49e521fe::t_b2b19877287d8d 1-12
+gradle/wrapper/gradle-wrapper.properties
+  s_711dbc49e521fe::t_c4b0ccaa51dd96 3
+.github/workflows/build.yml
+  s_711dbc49e521fe::t_c4b0ccaa51dd96 15,21-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bb7d127dd15479cc6bca4156a707975ef4a8bbd4",
+  "prompts": {},
+  "sessions": {
+    "s_711dbc49e521fe": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6578751effet93zY6k9Vxpco0",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "Berke Kocaoğlu <berke.kocaoglu@icloud.com>"
+    }
+  }
+}
