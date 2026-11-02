@@ -1,6 +1,6 @@
 package com.lothrazar.invcrafting.inventory;
 
-import com.lothrazar.invcrafting.ModInvCrafting;
+import com.lothrazar.invcrafting.ModConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class GuiInventoryCrafting extends InventoryScreen {
 
-  private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(ModInvCrafting.MODID, "textures/gui/inventorycraft.png");
+  private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(ModConstants.MODID, "textures/gui/inventorycraft.png");
 
   public GuiInventoryCrafting(Player p) {
     super(p);

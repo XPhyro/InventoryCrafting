@@ -2,8 +2,7 @@ package com.lothrazar.invcrafting.inventory;
 
 import java.util.List;
 import java.util.Optional;
-import com.lothrazar.invcrafting.ModInvCrafting;
-import net.minecraft.core.NonNullList;
+import com.lothrazar.invcrafting.ModConstants;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -81,10 +80,14 @@ public class ContainerPlayerCrafting extends InventoryMenu {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-          return stack.canEquip(equipmentslottype, player);
+          return player.getEquipmentSlotForItem(stack) == equipmentslottype;
+        }
+
+        @Override
+        public Identifier getNoItemIcon() {
+          return ARMOR_SLOT_TEXTURES[armorIdx];
         }
       };
-      armorSlot.setBackground(ARMOR_SLOT_TEXTURES[armorIdx]);
       this.addSlot(armorSlot);
     }
     for (int l = 0; l < 3; ++l) {
@@ -110,8 +113,12 @@ public class ContainerPlayerCrafting extends InventoryMenu {
       public boolean mayPlace(ItemStack stack) {
         return super.mayPlace(stack);
       }
+
+      @Override
+      public Identifier getNoItemIcon() {
+        return InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD;
+      }
     };
-    shieldSlot.setBackground(InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
     this.addSlot(shieldSlot);
     this.slotsChanged(this.craftGrid);
   }
@@ -123,12 +130,12 @@ public class ContainerPlayerCrafting extends InventoryMenu {
       this.addSlot(new ResultSlot(playerInventory.player, craftGrid, resultSlots, 0, 154, 24));
     }
     catch (Exception e) {
-      ModInvCrafting.LOGGER.error(" initCraftingGrid error", e);
+      ModConstants.LOGGER.error(" initCraftingGrid error", e);
     }
   }
 
   private void initInventorySlots() {
-    this.slots = NonNullList.create();
+    this.slots.clear();
   }
 
   @Override
@@ -156,7 +163,7 @@ public class ContainerPlayerCrafting extends InventoryMenu {
       slotChangedCraftingGrid(this, this.containerId, this.player.level(), this.player, this.craftGrid, this.resultSlots);
     }
     catch (Exception e) {
-      ModInvCrafting.LOGGER.error("crafting error", e);
+      ModConstants.LOGGER.error("crafting error", e);
     }
   }
 

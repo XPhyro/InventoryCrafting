@@ -9,7 +9,7 @@ import net.minecraft.resources.Identifier;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-  private Identifier id = Identifier.fromNamespaceAndPath(ModInvCrafting.MODID, "player");
+  private Identifier id = Identifier.fromNamespaceAndPath(ModConstants.MODID, "player");
 
   @Override
   public void registerRecipeTransferHandlers(IRecipeTransferRegistration registry) {

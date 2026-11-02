@@ -1,0 +1,75 @@
+plugins {
+  id 'net.fabricmc.fabric-loom' version '1.19.3'
+  id 'java'
+}
+
+def sharedGradleProperties = new Properties()
+file('../gradle.properties').withInputStream { sharedGradleProperties.load(it) }
+def modProperties = new Properties()
+file('../mod.properties').withInputStream { modProperties.load(it) }
+def fabricProperties = new Properties()
+file('fabric.properties').withInputStream { fabricProperties.load(it) }
+
+def minecraftVersion = sharedGradleProperties.getProperty('minecraft_version')
+def modId = modProperties.getProperty('mod_id')
+def modVersion = modProperties.getProperty('mod_version')
+
+version = "${minecraftVersion}-${modVersion}"
+group = modProperties.getProperty('mod_group_id')
+base {
+  archivesName = "${modId}-fabric"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+repositories {
+  maven { url = 'https://maven.fabricmc.net/' }
+  maven { url = 'https://maven.blamejared.com' }
+}
+
+dependencies {
+  minecraft "com.mojang:minecraft:${minecraftVersion}"
+  implementation "net.fabricmc:fabric-loader:${fabricProperties.getProperty('fabric_loader_version')}"
+  implementation "net.fabricmc.fabric-api:fabric-api:${fabricProperties.getProperty('fabric_api_version')}"
+  compileOnly "mezz.jei:jei-${minecraftVersion}-fabric-api:${sharedGradleProperties.getProperty('jei_version')}"
+  runtimeOnly "mezz.jei:jei-${minecraftVersion}-fabric:${sharedGradleProperties.getProperty('jei_version')}"
+}
+
+sourceSets.main.java {
+  srcDir '../src/main/java'
+  exclude 'com/lothrazar/invcrafting/InvCraftingEvents.java'
+  exclude 'com/lothrazar/invcrafting/ModInvCrafting.java'
+}
+
+sourceSets.main.resources {
+  srcDir '../src/main/resources'
+  exclude 'META-INF/accesstransformer.cfg'
+}
+
+processResources {
+  inputs.property 'version', project.version
+  inputs.property 'mod_id', modId
+  inputs.property 'mod_name', modProperties.getProperty('mod_name')
+  inputs.property 'mod_description', modProperties.getProperty('mod_description')
+  inputs.property 'mod_authors', modProperties.getProperty('mod_authors')
+  inputs.property 'mod_license', modProperties.getProperty('mod_license')
+  inputs.property 'minecraft_version', minecraftVersion
+  inputs.property 'fabric_loader_version', fabricProperties.getProperty('fabric_loader_version')
+
+  filesMatching('fabric.mod.json') {
+    expand(
+      version: project.version,
+      mod_id: modId,
+      mod_name: modProperties.getProperty('mod_name'),
+      mod_description: modProperties.getProperty('mod_description'),
+      mod_authors: modProperties.getProperty('mod_authors'),
+      mod_license: modProperties.getProperty('mod_license'),
+      minecraft_version: minecraftVersion,
+      fabric_loader_version: fabricProperties.getProperty('fabric_loader_version')
+    )
+  }
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+}

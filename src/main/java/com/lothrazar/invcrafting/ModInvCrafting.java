@@ -10,7 +10,7 @@ import net.neoforged.neoforge.common.NeoForge;
 public class ModInvCrafting {
 
   public static final Logger LOGGER = LogManager.getLogger();
-  public static final String MODID = "invcrafting";
+  public static final String MODID = ModConstants.MODID;
 
   public ModInvCrafting(IEventBus modEventBus) {
     NeoForge.EVENT_BUS.register(new InvCraftingEvents());
