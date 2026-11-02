@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.141'
+    id 'net.neoforged.moddev' version '2.0.148'
     id 'idea'
     id 'net.darkhax.curseforgegradle' version '1.1.25' apply false
     id 'com.modrinth.minotaur' version '2.9.0' apply false
@@ -51,7 +51,7 @@ base {
     archivesName = mod_id
 }
 
-// Mojang ships Java 25 to end users in 26.1.2, so mods should target Java 25.
+// Minecraft 26.3 requires Java 25, so mods should target Java 25.
 // for intellij make sure to set JVM  Navigate to Build, Execution, Deployment > Build Tools > Gradle
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
@@ -72,7 +72,7 @@ neoForge {
     //this cannot be above the mods block
     unitTest {
       enable()
-      // ties test/ classes to the flib mod so NeoForge's test launcher can load them
+      // ties test/ classes to this mod so NeoForge's test launcher can load them
       testedMod = mods."${mod_id}"
     }
 
@@ -161,29 +161,9 @@ dependencies {
   testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // for other mods depending on THIS FLIB library, use either a local copy or a maven
-    //   implementation "local.mods:flib:${minecraft_version}-${flib_version}"
-  implementation "curse.maven:flib-661261:${flib_file}"
-
-
-  //these mods have API jars for compile as well as the full mod for local
+  // JEI has an API jar for compilation and a full mod jar for local development.
   compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
   localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
-
-  compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
-  localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}+${minecraft_version}"
-
-  // vazkii.patchouli:Patchouli:26.1-${patchouli_version}-NEOFORGE-SNAPSHOT is the correct maven.blamejared.com
-  //  but no syced build on maven yet
-  // so this is temp fix
-  // use this once vazkii.patchouli:Patchouli:26.1-94-NEOFORGE-SNAPSHOT actually resolves there.
-  // might not be a snapshot anymore at this point
-//  compileOnly "vazkii.patchouli:Patchouli:26.1-${patchouli_version}-NEOFORGE-SNAPSHOT"
-  compileOnly "curse.maven:patchouli-306770:8404543" // patchouli-neoforge-26.1-94.jar
-  localRuntime "curse.maven:patchouli-306770:8404543"
-
- // compileOnly "com.blamejared.crafttweaker:CraftTweaker-neoforge-${minecraft_version}:${crafttweaker_version}"
-
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${minecraft_version}-${coolmod_version}.jar
@@ -214,8 +194,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
-            mod_description        : mod_description,
-            flib_version           : flib_version
+            mod_description        : mod_description
     ]
     inputs.properties replaceProperties
     expand replaceProperties

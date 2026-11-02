@@ -66,10 +66,3 @@ ${mod_description}
     versionRange="[${minecraft_version},)"
     ordering="NONE"
     side="BOTH"
-
-[[dependencies.${mod_id}]]
-    modId="flib"
-    type="required"
-    versionRange="[${flib_version},)"
-    ordering="NONE"
-    side="BOTH"
