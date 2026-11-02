@@ -1,0 +1,28 @@
+src/main/resources/pack.mcmeta
+  s_711dbc49e521fe::t_a99542c62d266a 3-5
+update.json
+  s_711dbc49e521fe::t_a99542c62d266a 4-5,12-14,16
+src/main/java/com/lothrazar/invcrafting/inventory/ContainerPlayerCrafting.java
+  s_711dbc49e521fe::t_359f3ba8dfc597 9,263
+build.gradle
+  s_711dbc49e521fe::t_a99542c62d266a 4,54,75
+  s_711dbc49e521fe::t_359123c5acdf2b 164,197
+gradle.properties
+  s_711dbc49e521fe::t_a99542c62d266a 12-13,19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0c92506c56e5e659cfaa9b3fb3b409c4d384017e",
+  "prompts": {},
+  "sessions": {
+    "s_711dbc49e521fe": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6578751effet93zY6k9Vxpco0",
+        "model": "gpt-6-luna"
+      },
+      "human_author": null
+    }
+  }
+}
