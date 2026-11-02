@@ -9,10 +9,10 @@
   "environment": "*",
   "entrypoints": {
     "main": ["com.lothrazar.invcrafting.FabricMod"],
-    "client": ["com.lothrazar.invcrafting.FabricClient"]
+    "jei_mod_plugin": ["com.lothrazar.invcrafting.JEIPlugin"]
   },
   "mixins": [
-    "invcrafting.mixins.json"
+    "invcrafting.common.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",

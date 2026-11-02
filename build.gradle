@@ -23,7 +23,6 @@ minecraftProperties.each { k, v ->
     }
 }
 layout.buildDirectory = layout.projectDirectory.dir("build/${minecraft_version}")
-sourceSets.main.java.srcDir("src/minecraft/${minecraft_version}/java")
 
 if (project == rootProject) {
 tasks.named('wrapper', Wrapper).configure {
@@ -68,9 +67,13 @@ base {
 // Minecraft 26.2 and 26.3 require Java 25, so mods should target Java 25.
 // for intellij make sure to set JVM  Navigate to Build, Execution, Deployment > Build Tools > Gradle
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+apply from: 'gradle/inventory-compatibility.gradle'
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
 neoForge {
+    // The expanded menu uses vanilla access levels; ignore any retired AT file
+    // left behind when this source update is applied to an older checkout.
+    accessTransformers = files()
     // Specify the version of NeoForge to use.
     version = project.neo_version
 
@@ -98,7 +101,6 @@ neoForge {
     // validateAccessTransformers = true
 
 
-    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -173,6 +175,8 @@ test {
 
 dependencies {
   testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+  testImplementation 'org.mockito:mockito-core:5.20.0'
+  testImplementation "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
   // JEI has an API jar for compilation and a full mod jar for local development.

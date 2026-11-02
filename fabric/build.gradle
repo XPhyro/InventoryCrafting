@@ -31,6 +31,7 @@ base {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+apply from: '../gradle/inventory-compatibility.gradle'
 
 repositories {
   maven { url = 'https://maven.fabricmc.net/' }
@@ -47,14 +48,11 @@ dependencies {
 
 sourceSets.main.java {
   srcDir '../src/main/java'
-  srcDir "../src/minecraft/${minecraftVersion}/java"
-  exclude 'com/lothrazar/invcrafting/InvCraftingEvents.java'
   exclude 'com/lothrazar/invcrafting/ModInvCrafting.java'
 }
 
 sourceSets.main.resources {
   srcDir '../src/main/resources'
-  exclude 'META-INF/accesstransformer.cfg'
 }
 
 processResources {

@@ -1,0 +1,86 @@
+import groovy.json.JsonSlurper
+import java.util.zip.ZipFile
+
+// Keep an update safe even when extracted over an old source checkout. These
+// classes belonged to the replaced-inventory implementation and must never be
+// compiled alongside the mixins that extend the vanilla inventory in place.
+sourceSets.main.java {
+    exclude 'com/lothrazar/invcrafting/InvCraftingEvents.java'
+    exclude 'com/lothrazar/invcrafting/FabricClient.java'
+    exclude 'com/lothrazar/invcrafting/inventory/ContainerPlayerCrafting.java'
+    exclude 'com/lothrazar/invcrafting/inventory/InventoryPlayerCrafting.java'
+    exclude 'com/lothrazar/invcrafting/inventory/GuiInventoryCrafting.java'
+    exclude 'com/lothrazar/invcrafting/inventory/FabricInventoryHooks.java'
+    exclude 'com/lothrazar/invcrafting/inventory/CraftingCompatibility.java'
+    exclude 'com/lothrazar/invcrafting/mixin/PlayerInventoryAccessor.java'
+    exclude 'com/lothrazar/invcrafting/mixin/MinecraftScreenMixin.java'
+}
+
+sourceSets.main.resources {
+    // Only the distinctly named shared config is authoritative. Do not select
+    // an arbitrary duplicate: the legacy config enables conflicting hooks.
+    exclude 'invcrafting.mixins.json'
+    exclude 'META-INF/accesstransformer.cfg'
+}
+
+def verifyModJar = tasks.register('verifyModJar') {
+    group = 'verification'
+    description = 'Checks the actual distributable for duplicate resources and retired inventory hooks.'
+    dependsOn tasks.named('jar')
+    inputs.file(tasks.named('jar').flatMap { it.archiveFile })
+
+    doLast {
+        File artifact = inputs.files.singleFile
+        new ZipFile(artifact).withCloseable { zip ->
+            def entries = zip.entries().toList().findAll { !it.directory }
+            def duplicates = entries.groupBy { it.name }.findAll { name, matches -> matches.size() > 1 }.keySet()
+            if (!duplicates.empty) {
+                throw new GradleException("Duplicate entries in ${artifact.name}: ${duplicates}")
+            }
+
+            def names = entries.collect { it.name }.toSet()
+            def configName = 'invcrafting.common.mixins.json'
+            if (!names.contains(configName)) {
+                throw new GradleException("Missing shared mixin configuration in ${artifact.name}")
+            }
+            def retired = names.findAll { name ->
+                name == 'invcrafting.mixins.json' || name == 'META-INF/accesstransformer.cfg' ||
+                name ==~ /com\/lothrazar\/invcrafting\/.*(?:InvCraftingEvents|FabricClient|ContainerPlayerCrafting|InventoryPlayerCrafting|GuiInventoryCrafting|FabricInventoryHooks|CraftingCompatibility|PlayerInventoryAccessor|MinecraftScreenMixin)(?:\$[^\/]*)?\.class/
+            }
+            if (!retired.empty) {
+                throw new GradleException("Retired inventory implementation in ${artifact.name}: ${retired}. Build from a clean checkout.")
+            }
+
+            def parser = new JsonSlurper()
+            def config = parser.parseText(zip.getInputStream(zip.getEntry(configName)).getText('UTF-8'))
+            def mixins = (config.mixins ?: []) + (config.client ?: []) + (config.server ?: [])
+            mixins.each { mixin ->
+                String className = "${config.package.replace('.', '/')}/${mixin.replace('.', '/')}.class"
+                if (!names.contains(className)) {
+                    throw new GradleException("Mixin ${mixin} is referenced but missing from ${artifact.name}")
+                }
+            }
+
+            if (names.contains('fabric.mod.json')) {
+                def mod = parser.parseText(zip.getInputStream(zip.getEntry('fabric.mod.json')).getText('UTF-8'))
+                if (mod.mixins != [configName] || mod.entrypoints.main != ['com.lothrazar.invcrafting.FabricMod'] || mod.entrypoints.client) {
+                    throw new GradleException("Fabric metadata still enables an obsolete inventory implementation in ${artifact.name}")
+                }
+                if (mod.entrypoints.jei_mod_plugin != ['com.lothrazar.invcrafting.JEIPlugin']) {
+                    throw new GradleException("Missing Fabric JEI entrypoint in ${artifact.name}")
+                }
+            }
+            else {
+                def metadata = zip.getEntry('META-INF/neoforge.mods.toml')
+                if (metadata == null || !zip.getInputStream(metadata).getText('UTF-8').contains('config="' + configName + '"')) {
+                    throw new GradleException("NeoForge metadata does not register the shared mixins in ${artifact.name}")
+                }
+            }
+        }
+        logger.lifecycle("Verified packaged inventory implementation: ${artifact.name}")
+    }
+}
+
+tasks.named('check') {
+    dependsOn verifyModJar
+}

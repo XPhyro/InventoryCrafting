@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(ModInvCrafting.MODID)
 public class ModInvCrafting {
@@ -13,6 +12,6 @@ public class ModInvCrafting {
   public static final String MODID = ModConstants.MODID;
 
   public ModInvCrafting(IEventBus modEventBus) {
-    NeoForge.EVENT_BUS.register(new InvCraftingEvents());
+    // The shared mixins expand the original inventory menu at construction.
   }
 }
